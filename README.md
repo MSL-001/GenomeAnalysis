@@ -7,7 +7,7 @@
 |Day|Estimated Time For step|Step|Status|
 |---|---|---|---|
 |03/04||Project Plan|Done|
-|04/04|20 min|Reads QC|Not Started|
+|04/04|10 min|Reads QC|Not Started|
 |04/04|3h|DNA Reads Preprocessing|Not Started|
 |07/04|3h|Genome assembly|Not Started|
 |10/04||DNA Mapping|Not Started|
