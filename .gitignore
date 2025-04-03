@@ -3,4 +3,3 @@
 *.fastq.gz
 *.fasta.gz
 *.out
-raw_data*
