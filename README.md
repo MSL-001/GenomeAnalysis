@@ -1,3 +1,3 @@
-## GenomeAnalysis
+# GenomeAnalysis
 
-# Project 2
+## Projectplan - Paper 2
