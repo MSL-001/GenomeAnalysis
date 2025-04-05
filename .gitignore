@@ -3,4 +3,6 @@
 *.fastq.gz
 *.fasta.gz
 *.out
+*fastqc.html
+*fastqc.zip
 *raw_data*
