@@ -1,0 +1,32 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 2
+#SBATCH -t 00:30:00
+#SBATCH -J DNA_trimming_short
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.out
+
+OUTPUT_PATH='/home/msl001/GenomeAnalysis/data/trimmed_data/short_DNA/'
+OUTPUT_PATH_2='/home/msl001/GenomeAnalysis/analyses/01_Trimming/DNA/short_reads'
+INPUT_PATH='/home/msl001/GenomeAnalysis/data/raw_data/DNA_reads/short_reads/'
+
+java -jar $TRIMMOMATIC_ROOT/trimmomatic.jar
+
+module load bioinfo-tools
+module load trimmomatic
+
+for i in {65,71,80};
+do
+  trimmomatic PE -threads 2 -phred33 "${INPUT_PATH}SRR244130${i}_1.fastq.gz" "${INPUT_PATH}SRR244130${i}_2.fastq.gz" \
+  "${OUTPUT_PATH}SRR244130${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}SRR244130${i}_1.U.trimmed.fastq-gz" \
+  "${OUTPUT_PATH}SRR244130${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}SRR244130${i}_2.U.trimmed.fastq.gz" \
+  ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:10 MINLEN:36
+
+  fastqc -o $OUTPUT_FastQC --threads 2 "${OUTPUT_PATH}SRR244130${i}_1.P.trimmed.fastq.gz" \
+  "${OUTPUT_PATH}SRR244130${i}_1.U.trimmed.fastq.gz" \
+  "${OUTPUT_PATH}SRR244130${i}_2.P.trimmed.fastq.gz" \
+  "${OUTPUT_PATH}SRR244130${i}_2.U.trimmed.fastq.gz"
+
