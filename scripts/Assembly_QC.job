@@ -1,0 +1,31 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 4
+#SBATCH -t 1:00:00
+#SBATCH -J QC_assembly
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.out
+
+
+OUTPUT_PATH='/home/msl001/GenomeAnalysis/analyses/02_Assembly/'
+INPUT_PATH='/home/msl001/GenomeAnalysis/analyses/02_Assembly/'
+INPUT_PATH_REF='/home/msl001/GenomeAnalysis/data/raw_data/reference_genome/'
+
+module load bioinfo-tools
+module load quast
+
+array1=( "66" "72" "81" )
+array2=( "HP126_genome.fasta" "R7_genome.fasta" "DV3_genome.fasta")
+
+for index in ${!array1[*]};
+do
+echo ${array1[$index]}
+python /sw/bioinfo/quast/5.0.2/rackham/bin/quast.py \
+-o "${OUTPUT_PATH}SRR244130${array1[$index]}/" \
+-r "${INPUT_PATH_REF}${array2[$index]}" \
+-t 4 \
+"${INPUT_PATH}SRR244130${array1[$index]}/assembly.fasta"
+done

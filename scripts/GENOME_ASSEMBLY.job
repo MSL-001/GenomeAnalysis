@@ -1,0 +1,24 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 3
+#SBATCH -t 6:00:00
+#SBATCH -J Genome_assembly
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.out
+
+OUTPUT_PATH='/home/msl001/GenomeAnalysis/analyses/02_Assembly/'
+INPUT_PATH='/home/msl001/GenomeAnalysis/data/trimmed_data/long_DNA/'
+
+module load bioinfo-tools
+module load Flye
+
+for i in {66,72,81};
+do
+flye --threads 3 --nano-raw "${INPUT_PATH}SRR244130${i}.trimmed.fastq.gz" \
+--out-dir "${OUTPUT_PATH}SRR244130${i}/"
+done
+
+
