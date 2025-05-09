@@ -1,0 +1,32 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 15
+#SBATCH -t 02:00:00
+#SBATCH -J RNA_trimming
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.out
+
+OUTPUT_PATH='/home/msl001/GenomeAnalysis/data/trimmed_data/RNA/'
+OUTPUT_PATH_2='/home/msl001/GenomeAnalysis/analyses/01_Trimming/RNA'
+INPUT_PATH='/home/msl001/GenomeAnalysis/data/raw_data/RNA_reads/'
+
+module load bioinfo-tools
+module load trimmomatic
+module load FastQC
+
+for i in "R7_A" "R7_B" "R7_C" "HP126_A" "HP126_B" "HP126_C" "DV3_A" "DV3_B" "DV3_C" ;
+do
+(
+trimmomatic PE -threads 5 "${INPUT_PATH}${i}_1.fastq.gz" "${INPUT_PATH}${i}_2.fastq.gz"\
+ "${OUTPUT_PATH}${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_1.U.trimmed.fastq.gz"\
+ "${OUTPUT_PATH}${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.U.trimmed.fastq.gz"\
+ ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 LEADING:10 TRAILING:20 SLIDINGWINDOW:4:20 MINLEN:36
+
+fastqc -o $OUTPUT_PATH_2 --threads 2 "${OUTPUT_PATH}${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_1.U.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.U.trimmed.fastq.gz"
+) &
+done
+
+wait

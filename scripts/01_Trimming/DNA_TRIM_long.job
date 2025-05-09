@@ -15,7 +15,7 @@ INPUT_PATH='/home/msl001/GenomeAnalysis/data/raw_data/DNA_reads/'
 module load bioinfo-tools
 module load Porechop
 
-for i in {66,72,81};
+for i in "R7" "HP126" "DV3" ;
 do
-porechop -i "${INPUT_PATH}SRR244130${i}.fastq.gz" -o "${OUTPUT_path}SRR244130${i}.trimmed.fastq.gz" --threads 2
+porechop -i "${INPUT_PATH}${i}.fastq.gz" -o "${OUTPUT_path}${i}.trimmed.fastq.gz" --threads 2
 done

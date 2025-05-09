@@ -1,0 +1,28 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 4
+#SBATCH -t 1:00:00
+#SBATCH -J polishing
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.out
+
+ASSEMBLY_INPUT='/home/msl001/GenomeAnalysis/analyses/02_Assembly/'
+MAP_INPUT='/home/msl001/GenomeAnalysis/data/mapped_data/DNA/'
+
+module load bioinfo-tools
+module load Pilon
+
+for i in "R7" "HP126" "DV3" ;
+do
+java -jar "${PILON_HOME}/pilon.jar" \
+ --threads 5 \
+ --genome "${ASSEMBLY_INPUT}${i}/assembly.fasta" \
+ --frags "${MAP_INPUT}${i}.bam" \
+ --outdir "${MAP_INPUT}" \
+ --output "${i}_pilon" \
+ --changes \
+ --vcf
+done

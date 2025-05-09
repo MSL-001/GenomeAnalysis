@@ -15,7 +15,7 @@ INPUT_PATH='/home/msl001/GenomeAnalysis/data/raw_data/RNA_reads/'
 module load bioinfo-tools
 module load FastQC
 
-for i in {56,57,58,59,60,61,62,63,64};
+for i in "R7_A" "R7_B" "R7_C" "HP126_A" "HP126_B" "HP126_C" "DV3_A" "DV3_B" "DV3_C";
 do 
-    fastqc -o $OUTPUT --threads 2 "${INPUT_PATH}SRR245164${i}_1.fastq.gz" "${INPUT_PATH}SRR245164${i}_2.fastq.gz"
+    fastqc -o $OUTPUT --threads 2 "${INPUT_PATH}${i}_1.fastq.gz" "${INPUT_PATH}${i}_2.fastq.gz"
 done

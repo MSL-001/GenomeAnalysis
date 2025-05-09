@@ -15,10 +15,10 @@ INPUT_PATH='/home/msl001/GenomeAnalysis/data/trimmed_data/long_DNA/'
 module load bioinfo-tools
 module load Flye
 
-for i in {66,72,81};
+for i in "R7" "HP126" "DV3" ;
 do
-flye --threads 3 --nano-raw "${INPUT_PATH}SRR244130${i}.trimmed.fastq.gz" \
---out-dir "${OUTPUT_PATH}SRR244130${i}/"
+flye --threads 3 --nano-raw "${INPUT_PATH}${i}.trimmed.fastq.gz" \
+--out-dir "${OUTPUT_PATH}${i}/"
 done
 
 

@@ -2,7 +2,7 @@
 #SBATCH -A uppmax2025-3-3
 #SBATCH -M snowy
 #SBATCH -p core
-#SBATCH -n 2
+#SBATCH -n 6
 #SBATCH -t 00:30:00
 #SBATCH -J DNA_trimming_short
 #SBATCH --mail-type=ALL
@@ -17,12 +17,16 @@ module load bioinfo-tools
 module load trimmomatic
 module load FastQC
 
-for i in {65,71,80};
+for i in "R7" "HP126" "DV3" ;
 do
-  trimmomatic PE -threads 2 "${INPUT_PATH}SRR244130${i}_1.fastq.gz" "${INPUT_PATH}SRR244130${i}_2.fastq.gz"\
- "${OUTPUT_PATH}SRR244130${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}SRR244130${i}_1.U.trimmed.fastq.gz"\
- "${OUTPUT_PATH}SRR244130${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}SRR244130${i}_2.U.trimmed.fastq.gz"\
+(
+  trimmomatic PE -threads 2 "${INPUT_PATH}${i}_1.fastq.gz" "${INPUT_PATH}${i}_2.fastq.gz"\
+ "${OUTPUT_PATH}${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_1.U.trimmed.fastq.gz"\
+ "${OUTPUT_PATH}${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.U.trimmed.fastq.gz"\
  ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 LEADING:10 TRAILING:20 SLIDINGWINDOW:4:20 MINLEN:36
 
-  fastqc -o $OUTPUT_PATH_2 --threads 2 "${OUTPUT_PATH}SRR244130${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}SRR244130${i}_1.U.trimmed.fastq.gz" "${OUTPUT_PATH}SRR244130${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}SRR244130${i}_2.U.trimmed.fastq.gz"
+  fastqc -o $OUTPUT_PATH_2 --threads 2 "${OUTPUT_PATH}${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_1.U.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.U.trimmed.fastq.gz"
+) &
 done
+
+wait

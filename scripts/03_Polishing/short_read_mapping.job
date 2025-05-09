@@ -1,0 +1,46 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 4
+#SBATCH -t 1:00:00
+#SBATCH -J Short_read_mapping
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.out
+
+OUTPUT='/home/msl001/GenomeAnalysis/data/mapped_data/DNA/'
+ASSEMBLY_INPUT='/home/msl001/GenomeAnalysis/analyses/02_Assembly/'
+TRIM_INPUT='/home/msl001/GenomeAnalysis/data/trimmed_data/short_DNA/'
+
+module load bioinfo-tools
+module load bwa
+module load samtools
+
+for index in "R7" "HP126" "DV3" ;
+do
+bwa index "${ASSEMBLY_INPUT}${i}/assembly.fasta"
+
+bwa mem -t 4 "${ASSEMBLY_INPUT}${i}/assembly.fasta" \
+"${TRIM_INPUT}${i}_1.P.trimmed.fastq.gz" \
+"${TRIM_INPUT}${i}_2.P.trimmed.fastq.gz" \
+> ${OUTPUT}${i}.sam
+
+done
+
+for i in "R7" "HP126" "DV3" ;
+do
+
+samtools view -b -h ${OUTPUT}${i}.sam > ${OUTPUT}${i}.bam
+
+rm ${OUTPUT}${i}.sam
+
+samtools sort ${OUTPUT}${i}.bam > ${OUTPUT}${i}.s.bam
+
+mv ${OUTPUT}${i}.s.bam ${OUTPUT}${i}.bam
+
+samtools index ${OUTPUT}${i}.bam
+
+done
+
+

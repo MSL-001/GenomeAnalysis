@@ -7,4 +7,8 @@
 *fastqc.zip
 *raw_data*
 *.fa
-analyses/02_Assembly/SRR*
+*.sam
+*.bam
+*.bam.bai
+analyses/*
+*_pilon*

@@ -17,15 +17,11 @@ INPUT_PATH_REF='/home/msl001/GenomeAnalysis/data/raw_data/reference_genome/'
 module load bioinfo-tools
 module load quast
 
-array1=( "66" "72" "81" )
-array2=( "HP126_genome.fasta" "R7_genome.fasta" "DV3_genome.fasta")
-
-for index in ${!array1[*]};
+for index in "R7" "HP126" "DV3" ;
 do
-echo ${array1[$index]}
 python /sw/bioinfo/quast/5.0.2/rackham/bin/quast.py \
--o "${OUTPUT_PATH}SRR244130${array1[$index]}/" \
--r "${INPUT_PATH_REF}${array2[$index]}" \
+-o "${OUTPUT_PATH}${i}/" \
+-r "${INPUT_PATH_REF}${i}_genome.fasta" \
 -t 4 \
-"${INPUT_PATH}SRR244130${array1[$index]}/assembly.fasta"
+"${INPUT_PATH}${i}/assembly.fasta"
 done

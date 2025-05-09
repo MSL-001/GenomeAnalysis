@@ -1,0 +1,23 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 2
+#SBATCH -t 30:00
+#SBATCH -J BLAST
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.out
+
+OUTPUT='/home/msl001/GenomeAnalysis/analyses/05_Genome-Comparison/'
+INPUT_FASTA='/home/msl001/GenomeAnalysis/data/mapped_data/DNA/'
+
+module load bioinfo-tools
+module load blast
+
+makeblastdb -in "${INPUT_FASTA}R7_pilon.fasta" -dbtype nucl -out "${OUTPUT}R7_db"
+
+for index in "HP126" "DV3" ;
+do
+blastn -query "${INPUT_FASTA}${i}_pilon.fasta" -db "${OUTPUT}R7_db" -evalue 1 -task megablast -outfmt 6 > "${i}_R7.crunch"
+done
