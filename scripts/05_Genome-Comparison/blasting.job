@@ -17,7 +17,7 @@ module load blast
 
 makeblastdb -in "${INPUT_FASTA}R7_pilon.fasta" -dbtype nucl -out "${OUTPUT}R7_db"
 
-for index in "HP126" "DV3" ;
+for i in "HP126" "DV3" ;
 do
 blastn -query "${INPUT_FASTA}${i}_pilon.fasta" -db "${OUTPUT}R7_db" -evalue 1 -task megablast -outfmt 6 > "${i}_R7.crunch"
 done
