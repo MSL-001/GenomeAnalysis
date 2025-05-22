@@ -23,6 +23,5 @@ java -jar "${PILON_HOME}/pilon.jar" \
  --frags "${MAP_INPUT}${i}.bam" \
  --outdir "${MAP_INPUT}" \
  --output "${i}_pilon" \
- --changes \
- --vcf
+ --changes
 done

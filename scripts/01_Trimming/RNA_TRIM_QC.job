@@ -23,7 +23,7 @@ do
 trimmomatic PE -threads 5 "${INPUT_PATH}${i}_1.fastq.gz" "${INPUT_PATH}${i}_2.fastq.gz"\
  "${OUTPUT_PATH}${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_1.U.trimmed.fastq.gz"\
  "${OUTPUT_PATH}${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.U.trimmed.fastq.gz"\
- ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 LEADING:10 TRAILING:20 SLIDINGWINDOW:4:20 MINLEN:36
+ ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
 
 fastqc -o $OUTPUT_PATH_2 --threads 2 "${OUTPUT_PATH}${i}_1.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_1.U.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.P.trimmed.fastq.gz" "${OUTPUT_PATH}${i}_2.U.trimmed.fastq.gz"
 ) &

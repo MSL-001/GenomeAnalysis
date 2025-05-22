@@ -1,0 +1,34 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 5
+#SBATCH -t 0:30:00
+#SBATCH -J RNA_mapping
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.out
+
+OUTPUT='/home/msl001/GenomeAnalysis/data/mapped_data/RNA/'
+ASSEMBLY_INPUT='/home/msl001/GenomeAnalysis/data/mapped_data/DNA/'
+TRIM_INPUT='/home/msl001/GenomeAnalysis/data/trimmed_data/RNA/'
+
+module load bioinfo-tools
+module load bwa
+module load samtools
+
+bwa index "${ASSEMBLY_INPUT}R7_pilon.fasta"
+
+bwa mem -t 5 "${ASSEMBLY_INPUT}R7_pilon.fasta" \
+"${TRIM_INPUT}R7_B_1.P.trimmed.fastq.gz" \
+"${TRIM_INPUT}R7_B_2.P.trimmed.fastq.gz" \
+> ${OUTPUT}R7_B.sam
+
+samtools view -b -h ${OUTPUT}R7_B.sam > ${OUTPUT}R7_B.bam
+
+rm ${OUTPUT}R7_B.sam
+
+samtools sort ${OUTPUT}R7_B.bam > ${OUTPUT}R7_B.s.bam
+mv ${OUTPUT}R7_B.s.bam ${OUTPUT}R7_B.bam
+
+samtools index ${OUTPUT}R7_B.bam

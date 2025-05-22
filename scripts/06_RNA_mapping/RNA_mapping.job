@@ -3,40 +3,72 @@
 #SBATCH -M snowy
 #SBATCH -p core
 #SBATCH -n 15
-#SBATCH -t 1:30:00
+#SBATCH -t 1:00:00
 #SBATCH -J RNA_mapping
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user male6723@student.uu.se
 #SBATCH --output=%x.%j.out
 
 OUTPUT='/home/msl001/GenomeAnalysis/data/mapped_data/RNA/'
-ASSEMBLY_INPUT='/home/msl001/GenomeAnalysis/analyses/02_Assembly/'
+ASSEMBLY_INPUT='/home/msl001/GenomeAnalysis/data/mapped_data/DNA/'
 TRIM_INPUT='/home/msl001/GenomeAnalysis/data/trimmed_data/RNA/'
 
 module load bioinfo-tools
 module load bwa
 module load samtools
 
-for i in "R7" "HP126" "DV3" ;
+bwa index "${ASSEMBLY_INPUT}R7_pilon.fasta"
+
+for i in "R7" "HP126" "DV3";
 do
 (
-bwa index "${ASSEMBLY_INPUT}${i}/assembly.fasta"
-
-bwa mem -t 5 "${ASSEMBLY_INPUT}${i}/assembly.fasta" \
+bwa mem -t 5 "${ASSEMBLY_INPUT}R7_pilon.fasta" \
 "${TRIM_INPUT}${i}_A_1.P.trimmed.fastq.gz" \
 "${TRIM_INPUT}${i}_A_2.P.trimmed.fastq.gz" \
 > ${OUTPUT}${i}_A.sam
 
-bwa mem -t 5 "${ASSEMBLY_INPUT}${i}/assembly.fasta" \
+samtools view -b -h ${OUTPUT}${i}_A.sam > ${OUTPUT}${i}_A.bam
+
+rm ${OUTPUT}${i}_A.sam
+
+bwa mem -t 5 "${ASSEMBLY_INPUT}R7_pilon.fasta" \
 "${TRIM_INPUT}${i}_B_1.P.trimmed.fastq.gz" \
 "${TRIM_INPUT}${i}_B_2.P.trimmed.fastq.gz" \
 > ${OUTPUT}${i}_B.sam
 
-bwa mem -t 5 "${ASSEMBLY_INPUT}${i}/assembly.fasta" \
+samtools view -b -h ${OUTPUT}${i}_B.sam > ${OUTPUT}${i}_B.bam
+
+rm ${OUTPUT}${i}_B.sam
+
+bwa mem -t 5 "${ASSEMBLY_INPUT}R7_pilon.fasta" \
 "${TRIM_INPUT}${i}_C_1.P.trimmed.fastq.gz" \
 "${TRIM_INPUT}${i}_C_2.P.trimmed.fastq.gz" \
 > ${OUTPUT}${i}_C.sam
+
+samtools view -b -h ${OUTPUT}${i}_C.sam > ${OUTPUT}${i}_C.bam
+
+rm ${OUTPUT}${i}_C.sam
 ) &
+done
+
+wait
+
+for i in "R7" "HP126" "DV3";
+do
+samtools sort ${OUTPUT}${i}_A.bam > ${OUTPUT}${i}_A.s.bam
+mv ${OUTPUT}${i}_A.s.bam ${OUTPUT}${i}_A.bam
+
+samtools index ${OUTPUT}${i}_A.bam
+
+samtools sort ${OUTPUT}${i}_B.bam > ${OUTPUT}${i}_B.s.bam
+mv ${OUTPUT}${i}_B.s.bam ${OUTPUT}${i}_B.bam
+
+samtools index ${OUTPUT}${i}_B.bam
+
+samtools sort ${OUTPUT}${i}_C.bam > ${OUTPUT}${i}_C.s.bam
+mv ${OUTPUT}${i}_C.s.bam ${OUTPUT}${i}_C.bam
+
+samtools index ${OUTPUT}${i}_C.bam
 done
 
 wait

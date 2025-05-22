@@ -2,8 +2,8 @@
 #SBATCH -A uppmax2025-3-3
 #SBATCH -M snowy
 #SBATCH -p core
-#SBATCH -n 16
-#SBATCH -t 00:40:00
+#SBATCH -n 15
+#SBATCH -t 01:00:00
 #SBATCH -J annotation
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user male6723@student.uu.se
@@ -17,10 +17,11 @@ module load prokka
 
 for i in "R7" "HP126" "DV3" ;
 do
+(
 prokka "${INPUT}${i}_pilon.fasta" \
 --outdir "${OUTPUT}${i}" --prefix DNA_annotated \
---force --addgenes \
---genus Streptomyces --species rimosus \
---usegenus \
---cpus 16
+--cpus 5 --force
+) &
 done
+
+wait

@@ -1,0 +1,29 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2025-3-3
+#SBATCH -M snowy
+#SBATCH -p core
+#SBATCH -n 8
+#SBATCH -t 0:10:00
+#SBATCH -J Read_counting
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user male6723@student.uu.se
+#SBATCH --output=%x.%j.output
+
+module load bioinfo-tools
+module load subread
+
+
+RNA_INPUT='/home/msl001/GenomeAnalysis/data/mapped_data/RNA/'
+ANNO_INPUT='/home/msl001/GenomeAnalysis/analyses/04_Annotation/'
+OUTPUT='/home/msl001/GenomeAnalysis/analyses/07_DE_analysis/'
+
+
+for i in "R7" "HP126" "DV3";
+do
+featureCounts -T 8 -p -s 0 \
+-a ${ANNO_INPUT}R7/DNA_annotated_clean.gff \
+-t CDS -g ID \
+-o ${OUTPUT}featurecount/${i}.txt ${RNA_INPUT}${i}*.bam 
+done
+
+wait
